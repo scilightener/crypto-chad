@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "chat.service";
+
+import "google/protobuf/empty.proto";
+
+service Chat {
+  rpc SendMessage(Message) returns (Message) {}
+  rpc ReceiveMessages(User) returns (stream Message) {}
+  rpc ActiveUsers(google.protobuf.Empty) returns (Users) {}
+}
+
+message Message {
+  string sender = 1;
+  string receiver = 2;
+  repeated bytes message = 3;
+}
+
+message Users {
+  repeated string usernames = 1;
+}
+
+message User {
+  string username = 1;
+}

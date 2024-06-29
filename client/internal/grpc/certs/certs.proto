@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option go_package = "certs.service";
+
+message CertIssueReq {
+  repeated bytes CiphUsername = 1;
+  ECDHPoint clientECDH = 2;
+  string salt = 3;
+}
+
+message CertRetrieveReq {
+  string asker = 1;
+  repeated bytes CiphUsername = 2;
+  string salt = 3;
+}
+
+message SignPubKey {
+  CiphReqPubKey pubKey = 1;
+  Sign sign = 2;
+}
+
+message SignKeys {
+  Keys keys = 1;
+  Sign sign = 2;
+}
+
+service Certs {
+  rpc IssueCert(CertIssueReq) returns (SignKeys) {}
+  rpc RetrieveCert(CertRetrieveReq) returns (SignPubKey) {}
+}
+
+// encrypted with ecdh
+message CiphPubKey {
+  bytes e = 1;
+  bytes n = 2;
+}
+
+// encrypted with rsa
+message CiphReqPubKey {
+  repeated bytes e = 1;
+  repeated bytes n = 2;
+}
+
+message CiphPrivKey {
+  bytes d = 1;
+  bytes n = 2;
+}
+
+message Keys {
+  ECDHPoint serverECDH = 1;
+  CiphPubKey pub = 2;
+  CiphPrivKey priv = 3;
+}
+
+message Sign {
+  repeated bytes cipher = 1;
+}
+
+message ECDHPoint {
+  string x = 1;
+  string y = 2;
+}
