@@ -16,7 +16,7 @@ func Run() {
 }
 
 func startApp(app *App) {
-	tcp, err := net.Listen("tcp", "localhost:9876")
+	tcp, err := net.Listen("tcp", "0.0.0.0:9876")
 	if err != nil {
 		app.logger.Error("Failed to listen: %v", slog.String("err", err.Error()))
 		panic(err)
