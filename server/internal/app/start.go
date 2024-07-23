@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+const defaultAddr = "0.0.0.0:9876"
+
 func Run() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	app := NewApp(logger)
@@ -16,7 +18,11 @@ func Run() {
 }
 
 func startApp(app *App) {
-	tcp, err := net.Listen("tcp", "0.0.0.0:9876")
+	host, ok := os.LookupEnv("HOST_ADDRESS")
+	if !ok {
+		host = defaultAddr
+	}
+	tcp, err := net.Listen("tcp", host)
 	if err != nil {
 		app.logger.Error("Failed to listen: %v", slog.String("err", err.Error()))
 		panic(err)
